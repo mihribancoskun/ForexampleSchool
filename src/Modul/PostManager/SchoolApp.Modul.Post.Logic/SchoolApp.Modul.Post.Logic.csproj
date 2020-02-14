@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <ApplicationIcon />
+    <StartupObject />
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Core\SchoolApp.RepoEf\SchoolApp.RepoEf.csproj" />
+    <ProjectReference Include="..\SchoolApp.Modul.Post.Provider\SchoolApp.Modul.Post.Provider.csproj" />
+  </ItemGroup>
+
+</Project>

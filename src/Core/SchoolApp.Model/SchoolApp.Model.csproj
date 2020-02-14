@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Request\**" />
+    <Compile Remove="Response\**" />
+    <EmbeddedResource Remove="Request\**" />
+    <EmbeddedResource Remove="Response\**" />
+    <None Remove="Request\**" />
+    <None Remove="Response\**" />
+  </ItemGroup>
+
+</Project>

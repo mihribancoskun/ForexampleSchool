@@ -1,0 +1,228 @@
+﻿
+<div class="kt-portlet kt-portlet--mobile">
+    <div class="kt-portlet__head kt-portlet__head--lg">
+        <div class="kt-portlet__head-label">
+            <span class="kt-portlet__head-icon">
+                <i class="kt-font-brand flaticon2-line-chart"></i>
+            </span>
+            <h3 class="kt-portlet__head-title">
+                Haberler Ve Duyrular
+            </h3>
+        </div>
+        <div class="kt-portlet__head-toolbar">
+            <div class="kt-portlet__head-wrapper">
+
+                &nbsp;
+                <div class="dropdown dropdown-inline">
+                    <button type="button" onclick="addFiled()" class="btn btn-brand btn-icon-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="flaticon2-plus"></i> Yeni Ekle
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="kt-portlet__body">
+
+        <!--begin: Search Form -->
+        <div class="kt-form kt-form--label-right kt-margin-t-20 kt-margin-b-10">
+            <div class="row align-items-center">
+                <div class="col-xl-12 order-2 order-xl-1">
+                    <div class="row align-items-center">
+                        <div class="col-md-12 kt-margin-b-20-tablet-and-mobile">
+                            <div class="kt-input-icon kt-input-icon--left">
+                                <input type="text" class="form-control" placeholder="Kayıt Ara ..." id="generalSearch">
+                                <span class="kt-input-icon__icon kt-input-icon__icon--left">
+                                    <span><i class="la la-search"></i></span>
+                                </span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--end: Search Form -->
+    </div>
+    <div class="kt-portlet__body kt-portlet__body--fit">
+        <!--begin: Datatable -->
+        <div class="kt-datatable" id="api_events"></div>
+        <!--end: Datatable -->
+    </div>
+
+</div>
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+    Launch demo modal
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="fieldModal" tabindex="-1" role="dialog" aria-labelledby="fieldModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content" id="modalLoadingContent">
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+@section Scripts
+{
+    <script>
+        'use strict';
+        // Class definition
+
+        var KTDefaultDatatableDemo = function () {
+            // Private functions
+
+            // basic demo
+            var demo = function () {
+
+                var datatable = $('.kt-datatable').KTDatatable({
+                    // datasource definition
+                    data: {
+                        type: 'remote',
+                        source: {
+                            read: {
+                                url: '/news/getNews',
+                            },
+                        },
+                        pageSize: 5, // display 20 records per page
+                        serverPaging: true,
+                        serverFiltering: true,
+                        serverSorting: true,
+                    },
+
+                    // layout definition
+                    layout: {
+                        scroll: true, // enable/disable datatable scroll both horizontal and vertical when needed.
+                        minHeight: null, // datatable's body's fixed height
+                        footer: false, // display/hide footer
+                    },
+
+                    // column sorting
+                    sortable: true,
+
+                    // toolbar
+                    toolbar: {
+                        // toolbar placement can be at top or bottom or both top and bottom repeated
+                        placement: ['bottom'],
+
+                        // toolbar items
+                        items: {
+                            // pagination
+                            pagination: {
+                                // page size select
+                                pageSizeSelect: [5, 10, 20, 30, 50], // display dropdown to select pagination size. -1 is used for "ALl" option
+                            },
+                        },
+                    },
+
+                    search: {
+                        input: $('#generalSearch'),
+                    },
+
+                    // columns definition
+                    columns: [
+                        {
+                            field: 'id',
+                            title: 'No',
+                            textAlign: 'center',
+                        }, {
+                            field: 'title',
+                            title: 'Başlık',
+                            textAlign: 'center',
+                        }, {
+                            field: 'content',
+                            title: 'İçerik',
+                            textAlign: 'center',
+                        }, {
+                            field: 'type',
+                            title: 'Kategori',
+                            textAlign: 'center',
+                        }, {
+                            field: 'publishDateText',
+                            title: 'Yayın Tarihi',
+                            textAlign: 'center',
+                        }, {
+                            field: 'terminationDateText',
+                            title: 'Bitiş Tarihi',
+                            textAlign: 'center',
+                        }, {
+                            field: 'Actions',
+                            title: 'Actions',
+                            sortable: false,
+                            width: 110,
+                            overflow: 'visible',
+                            autoHide: false,
+                            template: function (e) {
+                                return '\
+                                            <a href=" javascript:;" onclick="fieldDetail('+ e.id + ')" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="Edit details">\
+                                                <i class="la la-edit"></i>\
+                                            </a>\
+                                            <a  href="/News/DeletePost/'+ e.id + '"  class="btn btn-sm btn-clean btn-icon btn-icon-md" title="Delete">\
+                                                <i class="la la-trash"></i>\
+                                            </a>\
+                                        ';
+                            },
+                        }],
+
+                });
+
+
+
+            };
+
+
+            return {
+                // public functions
+                init: function () {
+                    demo();
+                    eventsCapture();
+                },
+            };
+        }();
+
+        jQuery(document).ready(function () {
+            KTDefaultDatatableDemo.init();
+        });
+
+
+        function fieldDetail(id) {
+            ajaxModelLoad("/news/DetailPost/" + id);
+        }
+
+        function addFiled() {
+            ajaxModelLoad("/news/AddPost/");
+        }
+
+
+
+        function parentList() {
+            ajaxModelLoad("/news/ParentList/");
+
+        }
+
+        function ajaxModelLoad(url) {
+
+            $("#fieldModal").modal();
+            modalLoading();
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function (data) {
+                    $("#modalLoadingContent").html(data);
+                }
+            });
+
+        }
+
+        function modalLoading() {
+            $("#modalLoadingContent").html("YÜKLENİYOR...");
+        }
+    </script>
+
+}

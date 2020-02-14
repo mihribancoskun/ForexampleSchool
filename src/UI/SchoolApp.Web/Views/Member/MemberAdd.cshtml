@@ -1,0 +1,55 @@
+﻿@using SchoolApp.Modul.School.Provider
+@model MemberViewModel
+
+@{
+    Layout = null;
+    var parent = (List<ParentViewModel>)ViewBag.parent;
+}
+
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Yeni Ekle</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<form id="formmember" action="@Url.Action("MemberUpdate", "Member")" method="post">
+
+    <div class="modal-body">
+
+        <div class="kt-portlet__body">
+            <div class="kt-section kt-section--first">
+                <div class="form-group">
+                    <label>İsim:</label>
+                    <input type="text" class="form-control" name="Name" value="@Model.Name" required>
+                </div>
+                <div class="form-group">
+                    <label>Soyisim:</label>
+                    <input type="text" class="form-control" name="Surname" value="@Model.Surname" required>
+                </div>
+                <div class="form-group">
+                    <label>Okul No:</label>
+                    <input type="number" class="form-control" name="SchoolNo" value="@Model.SchoolNo" required>
+                </div>
+                <div class="form-group">
+                    <label>Veli:</label>
+                    <select name="ParentId" class="form-control" required>
+                        <option value=""></option>
+                        @foreach (var pa in parent)
+                        {
+                            <option value="@pa.Id">@pa.Name @pa.Surname</option>
+                        }
+                    </select>
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">İptal</button>
+        <button type="submit" class="btn btn-primary">Kaydet</button>
+    </div>
+</form>
